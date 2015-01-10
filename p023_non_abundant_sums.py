@@ -1,42 +1,29 @@
 #!/usr/bin/python
 
+from project_euler import timeit, divisors
+
 import math
 
-def divisors(n):
-    yield 1
 
-    largest = int(math.sqrt(n))
+def sum_of_non_abundant(n):
+    abundants = set([i for i in range(1, n) if is_abundant(i)])
 
-    # special-case square numbers to avoid yielding the same divisor twice
-    if largest * largest == n:
-        yield largest
-    else:
-        largest += 1
+    return sum([i for i in range(1, n + 1) if not is_abundant_sum(abundants, i)])
 
-    # all other divisors
-    for i in range(2, largest):
-        if n % i == 0:
-            yield i
-            yield n / i
 
 def is_abundant(n):
     if n < 12:
         return False
     return sum(divisors(n)) > n
 
-def is_abundant_sum(n):
+
+def is_abundant_sum(abundants, n):
    for i in abundants:
        if i > n:  # assume "abundants" is ordered
          return False
-       if (n - i) in abundants_set:
+       if (n - i) in abundants:
            return True
    return False
 
-UPPER_LIMIT = 28123
 
-abundants = [n for n in range(1, UPPER_LIMIT) if is_abundant(n)]
-abundants_set = set(abundants)
-
-sum_of_non_abundants = sum(x for x in range(1, 28123 + 1) if not is_abundant_sum(x))
-
-print sum_of_non_abundants
+timeit(sum_of_non_abundant, 28123)

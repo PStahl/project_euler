@@ -2,50 +2,21 @@
 
 from itertools import permutations
 
-def is_prime(n):
-    if any(n % p == 0 for p in primes):
-        return True
-    else:
-        return False
+from project_euler import timeit, sieves, tuple_to_digit
 
-sieve = [True] * 10000 # Sieve is faster for 2M primes
-def mark(sieve, x):
-    for i in xrange(x+x, len(sieve), x):
-        sieve[i] = False
 
-for x in xrange(2, int(len(sieve) ** 0.5) + 1):
-    if sieve[x]: mark(sieve, x)
+def is_permutations(nbrs):
+    perms = map(tuple_to_digit, permutations(str(nbrs[0]), 4))
+    return all(nbr in perms for nbr in nbrs)
 
-primes = [i for i in xrange(2, len(sieve)) if sieve[i] and len(str(i)) == 4]
 
-def to_digit(n):
-    return int(reduce(lambda x,y: x + y, n))
+def prime_permutations():
+    sieve = sieves(10000)
+    diff = 3330
+    for nbr in xrange(1489, 10000, 2):
+        nbrs = [nbr, nbr + diff, nbr + 2 * diff]
+        if all(sieve[nbr] for nbr in nbrs) and is_permutations(nbrs):
+            return "".join(map(str, nbrs))
 
-for prime in primes:
-    prime_perms = []
-    for perm in filter(lambda x: x >= 1000, map(to_digit, list(permutations(str(prime), 4)))):
-        if sieve[perm]:
-            prime_perms.append(perm)
 
-    prime_perms = sorted(list(set(prime_perms)))
-    if len(prime_perms) >= 3:
-        result = []
-        prev_diff = prime_perms[1] - prime_perms[0]
-        result.append(prime_perms[0])
-        result.append(prime_perms[1])
-        i = 2
-        while i < len(prime_perms):
-            diff = prime_perms[i] - prime_perms[i - 1]
-            if diff == prev_diff:
-                result.append(prime_perms[i])
-            else:
-                result = [prime_perms[i-1], prime_perms[i]]
-
-            if len(result) == 3:
-                print result
-                break
-
-            i += 1
-
-            prev_diff = diff
-
+timeit(prime_permutations)

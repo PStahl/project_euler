@@ -1,17 +1,22 @@
 #!/usr/bin/python
 
+from project_euler import timeit
 
-def to_value_string(name):
+
+def name_scores():
+    f = open('p022_names.txt', 'r')
+    values = sorted(map(lambda name: to_string_value(name.replace("\"", "")), f.read().split(",")))
+    f.close()
+
+    result = 0
+    for index, character_values in enumerate(values):
+        result += sum(character_values) * (index + 1)
+
+    return result
+
+
+def to_string_value(name):
     return [ord(c) - ord('A') + 1 for c in name]
 
-def to_position_score(name_score, pos):
-    return sum(name_score) * pos
 
-f = open('p022_names.txt', 'r')
-names = sorted(map(lambda name: to_value_string(name.replace("\"", "")), f.read().split(",")))
-f.close()
-
-for i in range(len(names)):
-    names[i] = to_position_score(names[i], i + 1)
-
-print sum(names)
+timeit(name_scores)

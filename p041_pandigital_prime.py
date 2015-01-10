@@ -1,14 +1,17 @@
 #!/usr/bin/python
 
 from collections import Counter
+from itertools import permutations
 
-sieve = [True] * 10000000 # Sieve is faster for 2M primes
-def mark(sieve, x):
-    for i in xrange(x+x, len(sieve), x):
-        sieve[i] = False
+from project_euler import timeit, sieves
 
-for x in xrange(2, int(len(sieve) ** 0.5) + 1):
-    if sieve[x]: mark(sieve, x)
+
+def largest_pandigital_prime(sieve):
+    for i in xrange(7, 1, -1):
+        for perm in permutations([7, 6, 5, 4, 3, 2, 1], i):
+            if sieve[to_int(perm)]:
+                return to_int(perm)
+
 
 def is_pandigital(d, n):
     if len(str(d)) < n:
@@ -18,7 +21,9 @@ def is_pandigital(d, n):
 
     return count == Counter(str(d))
 
-primes = [i for i in xrange(2, len(sieve)) if sieve[i] and is_pandigital(i, len(str(i)))]
 
-print primes
-print max(primes)
+def to_int(n):
+    return int(reduce(lambda rst, d: rst * 10 + d, n))
+
+
+timeit(largest_pandigital_prime, sieves(7654322))

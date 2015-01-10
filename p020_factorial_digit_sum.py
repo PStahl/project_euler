@@ -1,16 +1,20 @@
 #!/usr/bin/python2.7
 
-N = 100
+from project_euler import timeit
 
 
-factorial = 1
-n = 2
+def digit_sum(n):
+    factorial = 1
+    i = 2
 
-while n <= N:
-    factorial *= n
-    if factorial % 10 == 0:
-        factorial = factorial / 10
-    n += 1
+    while i <= n:
+        factorial *= i
+        if factorial % 10 == 0:
+            factorial = factorial / 10
+        i += 1
 
-nbrs = map(lambda x: int(x), str(factorial))
-print sum(nbrs)
+    nbrs = map(lambda x: int(x), str(factorial))
+    return sum(nbrs)
+
+
+timeit(digit_sum, 100)

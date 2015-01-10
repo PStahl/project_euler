@@ -3,40 +3,44 @@
 import sys
 import math
 
+from project_euler import timeit
+
+
 def is_pentagonal(n):
-    p = (math.sqrt(24*n + 1) + 1) / 6
+    p = (math.sqrt(24 * n + 1) + 1) / 6
     return p == int(p)
+
 
 def pentagon(n):
     return n * (3 * n - 1) / 2
 
-j = 1
-k = 2
 
-min_so_far = sys.maxint
+def minimal_pentagon_numbers_sum():
+    j = 1
+    k = 2
 
-pk = pentagon(k)
-pj = pentagon(j)
+    min_so_far = sys.maxint
 
-not_found = True
-while not_found:
-    j = k - 1
-    while j > 0:
-        pj = pentagon(j)
-        sum = pk + pj
-        diff = pk - pj
-        if is_pentagonal(sum) and is_pentagonal(diff) and diff < min_so_far:
-            min_so_far = diff
-            not_found = False
-
-        j -= 1
-
-    k += 1
     pk = pentagon(k)
+    pj = pentagon(j)
 
-print min_so_far
+    found = False
+    while not found:
+        j = k - 1
+        while j > 0:
+            pj = pentagon(j)
+            sum = pk + pj
+            diff = pk - pj
+            if is_pentagonal(sum) and is_pentagonal(diff) and diff < min_so_far:
+                min_so_far = diff
+                found = True
+
+            j -= 1
+
+        k += 1
+        pk = pentagon(k)
+
+    return min_so_far
 
 
-
-
-
+timeit(minimal_pentagon_numbers_sum)

@@ -1,16 +1,7 @@
 #!/usr/bin/python
 
-def get_factors(i):
-    factors = []
-    n = 2
-    while i > 1:
-        if i % n == 0:
-            factors.append(n)
-            i = i / n
-        else:
-            n += 1
+from project_euler import timeit, get_non_distinct_factors
 
-    return factors
 
 def is_curious(n, d):
     a = [int(c) for c in str(n)]
@@ -28,22 +19,27 @@ def is_curious(n, d):
     else:
         return False
 
-curious = [(a, b) for a in range(10, 100) for b in range(10, 100) if a < b and is_curious(a, b)]
-print curious
 
-n = reduce(lambda x, y: x * y, [a for (a, b) in curious])
-d = reduce(lambda x, y: x * y, [b for (a, b) in curious])
-n = get_factors(n)
-d = get_factors(d)
-common = list(set(n) & set(d))
+def cancelling_fractions():
+    curious = [(a, b) for a in range(10, 100) for b in range(10, 100) if a < b and is_curious(a, b)]
 
-i = 0
-while i < len(d):
-    if d[i] in n:
-        n.remove(d[i])
-        d.remove(d[i])
-    else:
-        i += 1
+    n = reduce(lambda x, y: x * y, [a for (a, b) in curious])
+    d = reduce(lambda x, y: x * y, [b for (a, b) in curious])
+    n = get_non_distinct_factors(n) 
+    d = get_non_distinct_factors(d) 
+    common = list(set(n) & set(d))
 
-d = reduce(lambda x, y: x * y, d)
-print d
+    i = 0
+    while i < len(d):
+        if d[i] in n:
+            n.remove(d[i])
+            d.remove(d[i])
+        else:
+            i += 1
+
+    d = reduce(lambda x, y: x * y, d)
+    
+    return d
+
+
+timeit(cancelling_fractions)

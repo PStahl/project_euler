@@ -1,8 +1,22 @@
 #!/usr/bin/python2.7
 
-N = 15
+from project_euler import timeit
 
-T = map(lambda x: map(lambda y: int(y), x.split()), """75
+
+def max_path_sum(input, i=0, j=0):
+    n = len(input)
+    
+    if i >= n or j < 0 or j >= n:
+        return 0
+    elif cache[i][j] > 0:
+        return cache[i][j]
+    else:
+        cache[i][j] = input[i][j] + max(max_path_sum(input, i + 1, j), max_path_sum(input, i + 1, j + 1))
+        return cache[i][j]
+
+
+
+input = map(lambda x: map(lambda y: int(y), x.split()), """75
 95 64
 17 47 82
 18 35 87 10
@@ -18,15 +32,6 @@ T = map(lambda x: map(lambda y: int(y), x.split()), """75
 63 66 04 68 89 53 67 30 73 16 69 87 40 31
 04 62 98 27 23 09 70 98 73 93 38 53 60 04 23""".split('\n'))
 
-cache = [[-1 for i in range(N)] for j in range(N)]
 
-def maximum_path_sum(i, j):
-    if i >= N or j < 0 or j >= N:
-        return 0
-    elif cache[i][j] > 0:
-        return cache[i][j]
-    else:
-        cache[i][j] = T[i][j] + max(maximum_path_sum(i + 1, j), maximum_path_sum(i + 1, j + 1))
-        return cache[i][j]
-
-print maximum_path_sum(0, 0)
+cache = [[-1 for i in range(len(input))] for j in range(len(input))]
+print max_path_sum(input)

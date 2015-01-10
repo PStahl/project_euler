@@ -1,41 +1,28 @@
 #!/usr/bin/python
 
-N = 1000000
+import sys
 
-def is_prime(n):
-    if any(n % p == 0 for p in primes):
-        return True
-    else:
-        return False
-
-sieve = [True] * 2*N
-def mark(sieve, x):
-    for i in xrange(x+x, len(sieve), x):
-        sieve[i] = False
-
-for x in xrange(2, int(len(sieve) ** 0.5) + 1):
-    if sieve[x]: mark(sieve, x)
-
-primes = [i for i in xrange(2, len(sieve)) if sieve[i]]
-
-m = 0
-max_prime = 0
-for i in range(N):
-    if primes[i] > N:
-        break
-
-    j = 1
-    s = sum(primes[i:i+j])
-    while s < N and j < N:
-        if sieve[s] and j > m:
-            m = j
-            max_prime = s
-
-        j += 1
-        s = sum(primes[i:i+j])
+from project_euler import timeit, sieve_and_primes
 
 
+def consecutive_prime_sum(upper_bound):
+    (sieve, primes) = sieve_and_primes(upper_bound)
+
+    max_so_far = - sys.maxint
+    longest_so_far = 0
+
+    for index, prime in enumerate(primes):
+        i = 1
+        prime_sum = prime
+        while index + i < len(primes) and prime_sum < upper_bound:
+            if i >= longest_so_far and sieve[prime_sum]:
+                longest_so_far = i
+                max_so_far = prime_sum
+
+            prime_sum += primes[index + i]
+            i += 1
+
+    return max_so_far
 
 
-print m
-print max_prime
+timeit(consecutive_prime_sum, 1000000)

@@ -1,23 +1,29 @@
 #!/usr/bin/python
 
+import sys
 import math
 
-def f(a, b, c, p):
-    return a + b + c == p and ((a * a) + (b * b) == (c*c))
+from project_euler import timeit
 
 
-m = 0
-m_p = 0
-for p in xrange(0, 1001, 2):
-    n = 0
-    for a in range(2, p / 3):
-        if (p*p-2*p*a) % (2*(p-a)) == 0:
-            n += 1
+def is_triangle(a, b, c, perim):
+    return a + b + c == perim and ((a * a) + (b * b) == (c * c))
 
-    if n > m:
-        m = n
-        m_p = p
 
-print m
-print m_p
+def right_triangles(n):
+    max_so_far = -sys.maxint
+    solution = None
+    for perim in xrange(0, n + 1, 2):
+        solutions = 0
+        for a in range(2, perim / 3):
+            if (perim * perim - 2 * perim * a) % (2 * (perim - a)) == 0:
+                solutions += 1
 
+        if solutions > max_so_far:
+            max_so_far = solutions
+            solution = perim
+
+    return solution
+
+
+timeit(right_triangles, 1000)

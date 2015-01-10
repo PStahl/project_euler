@@ -1,14 +1,14 @@
 #!/usr/bin/python
 
+from project_euler import timeit
+
 import itertools
 
-test_N = 5
-test_nbrs = ['0', '1', '2']
-test_permutations = itertools.permutations(test_nbrs)
-#print list(test_permutations)
 
-N = 1000000
-nbrs = [str(unichr(x + ord('0'))) for x in range(0, 10)]
-permutations = itertools.permutations(nbrs)
-print list(permutations)[N - 1]
+def lexicographic_permutations(n):
+    nbrs = [str(unichr(x + ord('0'))) for x in range(0, 10)]
+    permutations = itertools.permutations(nbrs)
+    return "".join(list(permutations)[n - 1])
 
+
+timeit(lexicographic_permutations, 1000000)

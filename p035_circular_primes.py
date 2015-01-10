@@ -1,23 +1,24 @@
 #!/usr/bin/python
 
-def nbrs(i):
+from project_euler import timeit, sieves
+
+
+def circular_nbrs(i):
     s = str(i)
     nbrs = []
     for i in range(len(s)):
         nbrs.append(int(s[i:] + s[0:i]))
     return nbrs
 
-def is_circular(i):
-    return all(sieve[n] for n in nbrs(i))
 
-sieve = [True] * 1000000 # Sieve is faster for 2M primes
-def mark(sieve, x):
-    for i in xrange(x+x, len(sieve), x):
-        sieve[i] = False
+def is_circular(sieve, i):
+    return all(sieve[n] for n in circular_nbrs(i))
 
-for x in xrange(2, int(len(sieve) ** 0.5) + 1):
-    if sieve[x]: mark(sieve, x)
 
-primes = [i for i in xrange(2, len(sieve)) if sieve[i] and is_circular(i)]
+def circular_primes(n):
+    sieve = sieves(n)
+    primes = [i for i in xrange(2, len(sieve)) if sieve[i] and is_circular(sieve, i)]
+    return len(primes)
 
-print len(primes)
+
+timeit(circular_primes, 1000000)

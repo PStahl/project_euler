@@ -1,30 +1,30 @@
 #!/usr/bin/python
 
+import sys
+
 from collections import Counter
 
-UPPER_LIMIT = 99999
+from project_euler import timeit, is_pandigital
 
-DIGITS = Counter("123456789")
 
 def concatenated(l):
     return reduce(lambda x, y: str(x) + str(y), l)
 
-def is_pandigital(s):
-    if len(s) > 9:
-        return False
 
-    return DIGITS == Counter(s)
+def pandigital_multiples(upper_limit):
+    max_so_far = -sys.maxint
 
-m = 0
+    for i in range(1, upper_limit):
+        t = [1, 2]
+        nbr = concatenated(map(lambda x: x * i, t))
+        while len(nbr) < 10:
+            if is_pandigital(nbr):
+                max_so_far = max(max_so_far, int(nbr))
+            
+            t.append(t[-1] + 1)
+            nbr = concatenated(map(lambda x: x * i, t))
 
-for i in range(1, UPPER_LIMIT):
-    t = [1, 2]
-    s = concatenated(map(lambda x: x * i, t))
-    while len(s) < 10:
-        if is_pandigital(s):
-            if int(s) > m:
-                m = int(s)
-        t.append(t[-1] + 1)
-        s = concatenated(map(lambda x: x * i, t))
+    return max_so_far
 
-print m
+
+timeit(pandigital_multiples, 9999)

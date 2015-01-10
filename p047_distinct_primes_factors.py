@@ -1,41 +1,40 @@
 #!/usr/bin/python
 
 import sys
+
 from itertools import combinations
 
-sieve = [True] * 1000 # Sieve is faster for 2M primes
-def mark(sieve, x):
-    for i in xrange(x+x, len(sieve), x):
-        sieve[i] = False
+from project_euler import timeit, get_primes_under_n
 
-for x in xrange(2, int(len(sieve) ** 0.5) + 1):
-    if sieve[x]: mark(sieve, x)
 
-primes = [i for i in xrange(2, len(sieve)) if sieve[i]]
-
-def get_distinct_prime_factors(n):
+def get_number_of_distinct_prime_factors(primes, n):
+    count = 0
     f = 2
     factors = set()
     for p in primes:
         if p > n:
             break
-        elif n % p == 0:
+        elif n % p == 0 and p not in factors:
+            count += 1
             factors.add(p)
 
-    return list(factors)
+    return count
 
 
-result = []
-n = 2 * 3 * 5 * 7
-nf = 4
-ns = 4
-ci = 1
+def smallest_distinct_prime_factors(number_of_factors, upper_bound):
+    primes = get_primes_under_n(1000)
+    print len(primes)
+    nbr = 2 * 3 * 5 * 7
+    cnt = 1
 
-while ci != ns:
-    n += 1
-    if len(get_distinct_prime_factors(n)) == nf:
-        ci += 1
-    else:
-        ci = 0
+    while cnt != number_of_factors:
+        nbr += 1
+        if get_number_of_distinct_prime_factors(primes, nbr) == number_of_factors:
+            cnt += 1
+        else:
+            cnt = 0
 
-print n
+    return nbr - number_of_factors + 1
+
+
+timeit(smallest_distinct_prime_factors, 4, 1000)

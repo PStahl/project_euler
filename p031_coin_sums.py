@@ -1,27 +1,25 @@
 #!/usr/bin/python
 
-coins = [200, 100, 50, 20, 10, 5, 2, 1]
+from project_euler import timeit
 
-N = 200
+coins = (200, 100, 50, 20, 10, 5, 2, 1)
+cache = {}
 
-cache = [0 for i in range(0, N + 1)]
 
 def combinations(total, coins):
     if total == 0:
         return 1
-    elif total < 0 or not coins or len(coins) < 1:
+    elif total < 0 or not coins:
         return 0
+    elif (total, coins) in cache:
+        return cache[(total, coins)]
 
     n = 0
     for c in coins:
-        #print c
         n += combinations(total - c, filter(lambda x: x <= c, coins))
 
-    cache[total] = n
+    cache[(total, coins)] = n
     return n
 
-print combinations(200, coins)
 
-
-
-
+timeit(combinations, 200, coins)

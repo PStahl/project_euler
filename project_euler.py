@@ -1,6 +1,13 @@
 #!/usr/bin/python
 
 import time
+import math
+
+from collections import Counter
+
+
+PANDIGITAL_COUNT = Counter("123456789")
+sieve = None
 
 
 def timeit(fun, *args):
@@ -27,6 +34,10 @@ def get_n_primes(n, init=1000000):
     sieve = sieves(init)
     return [p for p in xrange(2, len(sieve)) if sieve[p]][:n]
 
+
+def sieve_and_primes(n):
+    sieve = sieves(n)
+    return (sieve, [p for p in xrange(2, len(sieve)) if sieve[p]])
 
 
 def prime_factorisation_no(n, primes=None):
@@ -87,5 +98,44 @@ def is_palindrome_2(n):
     return all(s[i] == s[len(s) - 1 - i] for i in range(0, (len(s) / 2)))
 
 
+def divisors(n, include_one=True):
+    if include_one:
+        yield 1
+
+    largest = int(math.sqrt(n))
+
+    # special-case square numbers to avoid yielding the same divisor twice
+    if largest * largest == n:
+        yield largest
+    else:
+        largest += 1
+
+    # all other divisors
+    for i in range(2, largest):
+        if n % i == 0:
+            yield i
+            yield n / i
 
 
+def get_non_distinct_factors(i):
+    factors = []
+    n = 2
+    while i > 1:
+        if i % n == 0:
+            factors.append(n)
+            i = i / n
+        else:
+            n += 1
+
+    return factors
+
+
+def is_pandigital(n, length=9):
+    if len(str(n)) > length:
+        return False
+
+    return PANDIGITAL_COUNT == Counter(str(n))
+
+
+def tuple_to_digit(n):
+    return int(reduce(lambda x,y: x + y, n))
